@@ -6,3 +6,6 @@
 .idea/
 *.iws
 
+# Build artifacts and test data
+/data/
+/out/

@@ -1,3 +1,5 @@
+package eu.appcorner.importer
+
 import picocli.CommandLine
 import kotlin.system.exitProcess
 
