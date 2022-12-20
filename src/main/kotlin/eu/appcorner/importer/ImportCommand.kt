@@ -27,7 +27,7 @@ class ImportCommand : Callable<Int> {
     lateinit var inputDir: File
 
     @Option(
-        names = ["-c", "--create"],
+        names = ["-c", "--no-create"],
         description = ["Automatically create missing tables (default: true)."],
         negatable = true
     )
