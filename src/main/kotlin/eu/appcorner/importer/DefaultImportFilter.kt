@@ -9,10 +9,17 @@ import java.sql.ResultSetMetaData
 import java.time.Duration
 import java.time.LocalDateTime
 
-class DefaultImportFilter(val columns: List<Column>) : ImportFilter {
-    private val columnTypes: Array<DataType> = columns.map { it.type }.toTypedArray()
+class DefaultImportFilter(private val columns: List<Column>? = null) : ImportFilter {
+    private var columnTypes: Array<DataType>? = null
+
+    init {
+        if (columns != null)
+            columnTypes = columns.map { it.type }.toTypedArray()
+    }
 
     override fun filterColumns(destColumns: MutableList<ColumnBuilder>, srcColumns: ResultSetMetaData?): MutableList<ColumnBuilder> {
+        columnTypes = destColumns.map { it.type }.toTypedArray()
+
         return destColumns
     }
 
@@ -25,7 +32,7 @@ class DefaultImportFilter(val columns: List<Column>) : ImportFilter {
             }
 
             // handle special column types
-            when (columnTypes[index]) {
+            when (columnTypes!![index]) {
                 DataType.SHORT_DATE_TIME, DataType.EXT_DATE_TIME -> {
                     if (row[index] != null)
                         row[index] = parseDateTimeColumn(row[index] as String)
