@@ -1,3 +1,5 @@
+@file:JvmName("Main")
+
 package eu.appcorner.importer
 
 import picocli.CommandLine

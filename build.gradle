@@ -1,6 +1,7 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.7.21'
     id 'org.jetbrains.kotlin.kapt' version '1.7.21'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'application'
 }
 
@@ -39,5 +40,11 @@ kapt {
 }
 
 application {
-    mainClassName = 'MainKt'
+    mainClassName = 'eu.appcorner.importer.Main'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'eu.appcorner.importer.Main'
+    }
 }
