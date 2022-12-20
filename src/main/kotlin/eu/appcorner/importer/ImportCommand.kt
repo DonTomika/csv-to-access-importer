@@ -4,6 +4,7 @@ import com.healthmarketscience.jackcess.Database
 import com.healthmarketscience.jackcess.DatabaseBuilder
 import com.healthmarketscience.jackcess.util.ImportUtil
 import picocli.CommandLine.Command
+import picocli.CommandLine.Option
 import picocli.CommandLine.Parameters
 import java.io.File
 import java.io.IOException
@@ -18,20 +19,25 @@ class ImportCommand : Callable<Int> {
     @Parameters(index = "1", description = ["The directory that contains the CSV files."])
     lateinit var inputDir: File
 
+    @Option(names = ["-t", "--truncate"], description = ["Truncate tables before the import."])
+    var truncateTables: Boolean = false
+
     override fun call(): Int {
         DatabaseBuilder.open(targetFile).use { db ->
             val files = inputDir.listFiles { file ->
                 file.isFile && file.canRead() && file.name.endsWith(".csv")
             }?.sorted() ?: throw IOException("inputDir does not exists or an IO error occurred")
 
-            println("Removing data:")
+            if (truncateTables) {
+                println("Removing data:")
 
-            for (file in files.reversed()) {
-                val tableName = file.nameWithoutExtension.removePrefix("ptv_")
+                for (file in files.reversed()) {
+                    val tableName = file.nameWithoutExtension.removePrefix("ptv_")
 
-                println(" - ${tableName}...")
+                    println(" - ${tableName}...")
 
-                db.getTable(tableName).removeAll { true }
+                    db.getTable(tableName).removeAll { true }
+                }
             }
 
             println("Importing data:")
